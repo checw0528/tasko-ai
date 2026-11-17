@@ -10,9 +10,27 @@
     <meta property="og:type" content="website" />
     <meta name="twitter:card" content="summary_large_image" />
     <!-- Pretendard Font -->
+    <!-- 첫 화면이 그려지기 전에 저장된 모드(없으면 기기 설정)를 적용해 깜빡임을 막는다 -->
+    <script>
+      (function () {
+        var theme = null;
+        try {
+          theme = localStorage.getItem('tasko-theme');
+        } catch (e) {
+          theme = null;
+        }
+        var isDark = theme === 'dark';
+        if (theme !== 'dark' && theme !== 'light') {
+          isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        }
+        if (isDark) {
+          document.documentElement.classList.add('dark');
+        }
+      })();
+    </script>
     <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
   </head>
-  <body class="bg-[#1A1E29] min-h-screen text-[#212529] antialiased">
+  <body class="bg-[#1A1E29] min-h-screen text-[#212529] dark:text-[#F1F3F5] antialiased">
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>

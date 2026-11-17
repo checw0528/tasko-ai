@@ -1,5 +1,8 @@
 @import "tailwindcss";
 
+/* 다크 모드: <html>에 dark 클래스가 있으면 dark: 접두사 색이 적용된다 (버튼으로 전환) */
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
   --font-sans: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
   --color-tasko-primary: #1EA65C;

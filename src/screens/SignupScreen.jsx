@@ -18,13 +18,13 @@ export default function SignupScreen() {
   };
 
   return (
-    <div className="w-full h-full bg-[#F8F9FA] flex flex-col justify-between select-none">
+    <div className="w-full h-full bg-[#F8F9FA] dark:bg-[#121417] flex flex-col justify-between select-none">
       {/* 상단 헤더 */}
       <header className="pt-4 px-7 flex items-center justify-between z-10 shrink-0">
-        <span className="text-[13px] font-medium text-[#495057] tracking-tight">Tasko Mobile</span>
+        <span className="text-[13px] font-medium text-[#495057] dark:text-[#ADB5BD] tracking-tight">Tasko Mobile</span>
         <div className="flex items-center space-x-1.5">
           <span className="w-2 h-2 rounded-full bg-[#1EA65C] inline-block"></span>
-          <span className="text-[13px] font-medium text-[#495057]">Online</span>
+          <span className="text-[13px] font-medium text-[#495057] dark:text-[#ADB5BD]">Online</span>
         </div>
       </header>
 
@@ -38,20 +38,20 @@ export default function SignupScreen() {
                 <path d="M5 13l4 4L19 7" strokeLinecap="round" strokeLinejoin="round"></path>
               </svg>
             </div>
-            <h1 className="text-3xl font-extrabold tracking-tight text-[#212529]">Tasko</h1>
+            <h1 className="text-3xl font-extrabold tracking-tight text-[#212529] dark:text-[#F1F3F5]">Tasko</h1>
           </div>
-          <p className="text-[14px] text-[#495057] font-medium tracking-tight">이메일로 간단하게 시작하세요</p>
+          <p className="text-[14px] text-[#495057] dark:text-[#ADB5BD] font-medium tracking-tight">이메일로 간단하게 시작하세요</p>
         </div>
 
         {/* 회원가입 폼 */}
         <form onSubmit={handleSubmit} className="w-full space-y-3.5">
           {/* 항목 1: 이메일 */}
           <div className="space-y-1.5">
-            <label className="block text-[13px] font-medium text-[#495057] pl-0.5" htmlFor="signupEmail">
+            <label className="block text-[13px] font-medium text-[#495057] dark:text-[#ADB5BD] pl-0.5" htmlFor="signupEmail">
               이메일
             </label>
             <input
-              className="w-full h-[50px] px-4 rounded-xl border border-[#E9ECEF] bg-white text-[14.5px] text-[#212529] placeholder-[#868E96] focus:outline-none focus:border-[#1EA65C] focus:ring-1 focus:ring-[#1EA65C] transition-colors"
+              className="w-full h-[50px] px-4 rounded-xl border border-[#E9ECEF] dark:border-[#2C3036] bg-white dark:bg-[#1E2125] text-[14.5px] text-[#212529] dark:text-[#F1F3F5] placeholder-[#868E96] focus:outline-none focus:border-[#1EA65C] focus:ring-1 focus:ring-[#1EA65C] transition-colors"
               id="signupEmail"
               placeholder="example@tasko.app"
               type="email"
@@ -63,11 +63,11 @@ export default function SignupScreen() {
 
           {/* 항목 2: 비밀번호 */}
           <div className="space-y-1.5">
-            <label className="block text-[13px] font-medium text-[#495057] pl-0.5" htmlFor="signupPassword">
+            <label className="block text-[13px] font-medium text-[#495057] dark:text-[#ADB5BD] pl-0.5" htmlFor="signupPassword">
               비밀번호
             </label>
             <input
-              className="w-full h-[50px] px-4 rounded-xl border border-[#E9ECEF] bg-white text-[14.5px] text-[#212529] placeholder-[#868E96] focus:outline-none focus:border-[#1EA65C] focus:ring-1 focus:ring-[#1EA65C] transition-colors"
+              className="w-full h-[50px] px-4 rounded-xl border border-[#E9ECEF] dark:border-[#2C3036] bg-white dark:bg-[#1E2125] text-[14.5px] text-[#212529] dark:text-[#F1F3F5] placeholder-[#868E96] focus:outline-none focus:border-[#1EA65C] focus:ring-1 focus:ring-[#1EA65C] transition-colors"
               id="signupPassword"
               placeholder="비밀번호를 입력하세요"
               type="password"
@@ -79,11 +79,11 @@ export default function SignupScreen() {
 
           {/* 항목 3: 비밀번호 확인 */}
           <div className="space-y-1.5">
-            <label className="block text-[13px] font-medium text-[#495057] pl-0.5" htmlFor="passwordConfirm">
+            <label className="block text-[13px] font-medium text-[#495057] dark:text-[#ADB5BD] pl-0.5" htmlFor="passwordConfirm">
               비밀번호 확인
             </label>
             <input
-              className="w-full h-[50px] px-4 rounded-xl border border-[#E9ECEF] bg-white text-[14.5px] text-[#212529] placeholder-[#868E96] focus:outline-none focus:border-[#1EA65C] focus:ring-1 focus:ring-[#1EA65C] transition-colors"
+              className="w-full h-[50px] px-4 rounded-xl border border-[#E9ECEF] dark:border-[#2C3036] bg-white dark:bg-[#1E2125] text-[14.5px] text-[#212529] dark:text-[#F1F3F5] placeholder-[#868E96] focus:outline-none focus:border-[#1EA65C] focus:ring-1 focus:ring-[#1EA65C] transition-colors"
               id="passwordConfirm"
               placeholder="비밀번호를 한 번 더 입력하세요"
               type="password"
@@ -107,7 +107,7 @@ export default function SignupScreen() {
 
       {/* 하단 로그인 전환 링크 */}
       <footer className="pb-8 flex flex-col items-center shrink-0">
-        <p className="text-[13px] text-[#495057] font-normal tracking-tight">
+        <p className="text-[13px] text-[#495057] dark:text-[#ADB5BD] font-normal tracking-tight">
           이미 계정이 있으신가요?{' '}
           <Link to="/login" className="text-[#1EA65C] font-semibold hover:underline ml-1">
             로그인
