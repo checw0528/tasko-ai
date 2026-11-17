@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { TaskProvider } from './context/TaskContext.jsx';
 import { ThemeProvider } from './context/ThemeContext.jsx';
 import DeviceFrame from './components/DeviceFrame.jsx';
+import ProtectedRoute from './components/ProtectedRoute.jsx';
 import LoginScreen from './screens/LoginScreen.jsx';
 import SignupScreen from './screens/SignupScreen.jsx';
 import DashboardScreen from './screens/DashboardScreen.jsx';
@@ -31,9 +32,10 @@ export default function App() {
               <Route path="/" element={<LoginScreen />} />
               <Route path="/login" element={<LoginScreen />} />
               <Route path="/signup" element={<SignupScreen />} />
-              <Route path="/dashboard" element={<DashboardScreen />} />
-              <Route path="/tasks" element={<AllTasksScreen />} />
-              <Route path="/tasks/:id" element={<TaskDetailScreen />} />
+              {/* 아래 3개 화면은 로그인한 사람만 볼 수 있다 */}
+              <Route path="/dashboard" element={<ProtectedRoute><DashboardScreen /></ProtectedRoute>} />
+              <Route path="/tasks" element={<ProtectedRoute><AllTasksScreen /></ProtectedRoute>} />
+              <Route path="/tasks/:id" element={<ProtectedRoute><TaskDetailScreen /></ProtectedRoute>} />
               {/* 알 수 없는 경로는 로그인으로 리디렉트 */}
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>

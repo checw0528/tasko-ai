@@ -5,6 +5,7 @@ import { useTasks } from '../context/useTasks.js';
 import TaskCard from '../components/TaskCard.jsx';
 import BottomSheet from '../components/BottomSheet.jsx';
 import ThemeToggle from '../components/ThemeToggle.jsx';
+import { supabase } from '../lib/supabase.js';
 
 /**
  * Tasko 모바일 대시보드 화면
@@ -31,6 +32,14 @@ export default function DashboardScreen() {
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [isSearchActive, setIsSearchActive] = useState(false);
+
+  // 프로필(TK) 버튼: 로그아웃하고 로그인 화면으로 이동
+  async function handleLogout() {
+    if (supabase) {
+      await supabase.auth.signOut();
+    }
+    navigate('/login');
+  }
 
   // 필터 조건에 따른 태스크 필터링
   const filteredTasks = tasks.filter((task) => {
@@ -80,11 +89,11 @@ export default function DashboardScreen() {
               <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
             </svg>
           </button>
-          {/* 프로필 아바타: 클릭 시 로그아웃 / 로그인 화면 이동 가능 */}
+          {/* 프로필 아바타: 클릭 시 로그아웃하고 로그인 화면으로 이동 */}
           <button
             type="button"
-            onClick={() => navigate('/login')}
-            title="로그인 화면으로 이동"
+            onClick={handleLogout}
+            title="로그아웃"
             className="w-8 h-8 rounded-full bg-[#E8F7EE] dark:bg-[#1B3A2A] border border-[#1EA65C]/20 flex items-center justify-center text-xs font-bold text-[#1EA65C] hover:opacity-80 transition-opacity"
           >
             TK
