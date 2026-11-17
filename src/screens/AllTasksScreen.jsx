@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useTasks } from '../context/TaskContext.jsx';
+import { AnimatePresence, motion } from 'motion/react';
+import { useTasks } from '../context/useTasks.js';
 import TaskCard from '../components/TaskCard.jsx';
 import BottomSheet from '../components/BottomSheet.jsx';
 
@@ -228,16 +229,25 @@ export default function AllTasksScreen() {
       </div>
 
       {/* 3. 태스크 리스트 메인 스크롤 영역 */}
-      <main className="flex-1 overflow-y-auto px-5 py-3.5 space-y-3 pb-24 no-scrollbar">
-        {filteredTasks.length === 0 ? (
-          <div className="h-44 flex flex-col items-center justify-center text-center p-6 bg-white rounded-2xl border border-dashed border-[#E9ECEF]">
+      <main className="relative flex-1 overflow-y-auto px-5 py-3.5 space-y-3 pb-24 no-scrollbar">
+        {/* 카드 목록: 카드가 빠질 때 흐려지며 사라지도록 AnimatePresence로 감싼다 */}
+        <AnimatePresence initial={false} mode="popLayout">
+          {filteredTasks.map((task) => (
+            <TaskCard key={task.id} task={task} onToggle={toggleTask} />
+          ))}
+        </AnimatePresence>
+
+        {/* 목록이 비면 안내 상자 표시 (사라지는 카드와 겹치지 않게 살짝 늦게 나타남) */}
+        {filteredTasks.length === 0 && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.2, delay: 0.2 }}
+            className="h-44 flex flex-col items-center justify-center text-center p-6 bg-white rounded-2xl border border-dashed border-[#E9ECEF]"
+          >
             <p className="text-sm font-medium text-[#495057]">조건에 맞는 할 일이 없습니다</p>
             <p className="text-xs text-[#868E96] mt-1">필터를 변경하거나 새 할 일을 추가해보세요</p>
-          </div>
-        ) : (
-          filteredTasks.map((task) => (
-            <TaskCard key={task.id} task={task} onToggle={toggleTask} />
-          ))
+          </motion.div>
         )}
       </main>
 

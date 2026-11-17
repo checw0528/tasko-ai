@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { useTasks } from '../context/TaskContext.jsx';
+import { useTasks } from '../context/useTasks.js';
 
 /**
  * Tasko 모바일 할 일 상세/수정 화면
@@ -13,32 +13,12 @@ import { useTasks } from '../context/TaskContext.jsx';
 export default function TaskDetailScreen() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { tasks, updateTask, deleteTask } = useTasks();
+  const { tasks } = useTasks();
 
   const taskId = Number(id);
   const task = tasks.find((t) => t.id === taskId);
 
-  // 로컬 폼 상태
-  const [title, setTitle] = useState('');
-  const [priority, setPriority] = useState('medium');
-  const [tag, setTag] = useState('#생활');
-  const [dueDate, setDueDate] = useState('');
-  const [starred, setStarred] = useState(false);
-  const [completed, setCompleted] = useState(false);
-  const [createdAt, setCreatedAt] = useState('2026.11.10');
-
-  useEffect(() => {
-    if (task) {
-      setTitle(task.title);
-      setPriority(task.priority || 'medium');
-      setTag(task.tag || '#생활');
-      setDueDate(task.dueDate || '');
-      setStarred(Boolean(task.starred));
-      setCompleted(Boolean(task.completed));
-      setCreatedAt(task.createdAt || '2026.11.10');
-    }
-  }, [task]);
-
+  // 할 일이 없으면 안내 화면을 보여 준다
   if (!task) {
     return (
       <div className="w-full h-full bg-[#F8F9FA] flex flex-col items-center justify-center p-6 text-center">
@@ -53,6 +33,29 @@ export default function TaskDetailScreen() {
       </div>
     );
   }
+
+  // key={taskId}: 다른 할 일로 바뀌면 폼을 새로 만들어 입력값을 처음부터 채운다
+  return <TaskEditForm key={taskId} task={task} />;
+}
+
+/**
+ * 할 일 수정 폼 (상세 화면 안쪽 부품)
+ * - 폼 입력값의 처음 값을 useState 초기값으로 바로 넣는다 (useEffect 불필요)
+ */
+function TaskEditForm({ task }) {
+  const navigate = useNavigate();
+  const { updateTask, deleteTask } = useTasks();
+
+  const taskId = task.id;
+
+  // 로컬 폼 상태 (처음 값은 task에서 가져온다)
+  const [title, setTitle] = useState(task.title);
+  const [priority, setPriority] = useState(task.priority || 'medium');
+  const [tag, setTag] = useState(task.tag || '#생활');
+  const [dueDate, setDueDate] = useState(task.dueDate || '');
+  const [starred, setStarred] = useState(Boolean(task.starred));
+  const [completed, setCompleted] = useState(Boolean(task.completed));
+  const createdAt = task.createdAt || '2026.11.10';
 
   // 완료 상태 토글
   const handleToggleCompletion = () => {

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { useTasks } from '../context/TaskContext.jsx';
+import { AnimatePresence, motion } from 'motion/react';
+import { useTasks } from '../context/useTasks.js';
 import TaskCard from '../components/TaskCard.jsx';
 import BottomSheet from '../components/BottomSheet.jsx';
 
@@ -265,7 +266,7 @@ export default function DashboardScreen() {
       </div>
 
       {/* 3. 중앙 메인 스크롤 영역: 할 일 목록 */}
-      <main className="flex-1 overflow-y-auto px-4 py-3 space-y-2.5 pb-24 no-scrollbar">
+      <main className="relative flex-1 overflow-y-auto px-4 py-3 space-y-2.5 pb-24 no-scrollbar">
         {/* [요구사항] "오늘 할 일 · 전체 보기 >" 링크 */}
         <div className="flex items-center justify-between px-1 pt-1 pb-1">
           <Link
@@ -288,8 +289,21 @@ export default function DashboardScreen() {
         </div>
 
         {/* 할 일 카드 리스트 */}
-        {filteredTasks.length === 0 ? (
-          <div className="h-44 flex flex-col items-center justify-center text-center p-6 bg-white rounded-2xl border border-dashed border-[#E9ECEF]">
+        {/* 카드 목록: 카드가 빠질 때 흐려지며 사라지도록 AnimatePresence로 감싼다 */}
+        <AnimatePresence initial={false} mode="popLayout">
+          {filteredTasks.map((task) => (
+            <TaskCard key={task.id} task={task} onToggle={toggleTask} />
+          ))}
+        </AnimatePresence>
+
+        {/* 목록이 비면 안내 상자 표시 (사라지는 카드와 겹치지 않게 살짝 늦게 나타남) */}
+        {filteredTasks.length === 0 && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.2, delay: 0.2 }}
+            className="h-44 flex flex-col items-center justify-center text-center p-6 bg-white rounded-2xl border border-dashed border-[#E9ECEF]"
+          >
             <div className="w-10 h-10 rounded-full bg-[#F8F9FA] flex items-center justify-center text-[#868E96] mb-2">
               <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <circle cx="12" cy="12" r="10"></circle>
@@ -299,11 +313,7 @@ export default function DashboardScreen() {
             </div>
             <p className="text-sm font-medium text-[#495057]">해당하는 할 일이 없습니다</p>
             <p className="text-xs text-[#868E96] mt-0.5">우측 하단 (+) 버튼을 눌러 새 할 일을 등록해보세요</p>
-          </div>
-        ) : (
-          filteredTasks.map((task) => (
-            <TaskCard key={task.id} task={task} onToggle={toggleTask} />
-          ))
+          </motion.div>
         )}
       </main>
 

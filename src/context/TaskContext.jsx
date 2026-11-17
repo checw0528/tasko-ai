@@ -1,8 +1,6 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { useState } from 'react';
 import initialTasks from '../data/tasks.js';
-
-// 할 일 상태 공유를 위한 React Context
-const TaskContext = createContext(null);
+import { TaskContext } from './useTasks.js';
 
 export function TaskProvider({ children }) {
   // src/data/tasks.js의 8개 샘플 데이터를 초기 상태로 사용
@@ -93,13 +91,4 @@ export function TaskProvider({ children }) {
       {children}
     </TaskContext.Provider>
   );
-}
-
-// 편의를 위한 Custom Hook
-export function useTasks() {
-  const context = useContext(TaskContext);
-  if (!context) {
-    throw new Error('useTasks must be used within a TaskProvider');
-  }
-  return context;
 }

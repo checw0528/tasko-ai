@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { motion } from 'motion/react';
 import PriorityBadge from './PriorityBadge.jsx';
 
 /**
@@ -8,9 +9,14 @@ import PriorityBadge from './PriorityBadge.jsx';
  * - 본문 터치: 할 일 상세/수정 화면(/tasks/:id)으로 이동
  * - 완료 상태 시: 모든 화면에서 제목에 취소선 및 연한 회색(#868E96) 처리
  */
-export default function TaskCard({ task, onToggle }) {
+export default function TaskCard({ task, onToggle, ref }) {
+  // ref: AnimatePresence(popLayout)가 사라지는 카드의 위치를 잡기 위해 넘겨 주는 값
   const navigate = useNavigate();
   const isDone = task.completed;
+
+  // 방금 체크를 눌러 완료가 된 경우에만 '톡' 효과를 보여 주기 위한 상태
+  // (이미 완료된 카드가 화면에 처음 나타날 때는 효과가 나오지 않는다)
+  const [justChecked, setJustChecked] = useState(false);
 
   const handleCardClick = () => {
     navigate(`/tasks/${task.id}`);
@@ -18,8 +24,29 @@ export default function TaskCard({ task, onToggle }) {
 
   const handleCheckboxClick = (e) => {
     e.stopPropagation();
+    // 지금 미완료 상태라면 이번 클릭으로 완료가 되므로 효과를 켠다
+    if (isDone) {
+      setJustChecked(false);
+    } else {
+      setJustChecked(true);
+    }
     onToggle(task.id);
   };
+
+  // 카드 투명도: 완료된 카드는 기존처럼 90%로 보이게 한다
+  // (motion이 inline 스타일로 투명도를 정하므로 여기서 값을 직접 정한다)
+  let cardOpacity = 1;
+  if (isDone) {
+    cardOpacity = 0.9;
+  }
+
+  // 체크 표시 효과: 0.5배 → 1.3배 → 1배 (0.25초)
+  let checkInitial = { scale: 1 };
+  let checkAnimate = { scale: 1 };
+  if (justChecked) {
+    checkInitial = { scale: 0.5 };
+    checkAnimate = { scale: [0.5, 1.3, 1] };
+  }
 
   const handleMoreClick = (e) => {
     e.stopPropagation();
@@ -30,11 +57,17 @@ export default function TaskCard({ task, onToggle }) {
   const isOverdue = task.isOverdue || (task.dueDate && task.dueDate.includes('기한 지남'));
 
   return (
-    <article
+    <motion.article
+      ref={ref}
       onClick={handleCardClick}
-      className={`relative flex items-center gap-3 p-3.5 bg-white rounded-2xl border transition-all duration-200 cursor-pointer shadow-[0_1px_3px_rgba(0,0,0,0.04)] ${
+      // 나타날 때: 아래에서 살짝 올라오며 보인다 / 사라질 때: 흐려진다
+      initial={{ opacity: 0, y: 12 }}
+      animate={{ opacity: cardOpacity, y: 0 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.25, ease: 'easeOut' }}
+      className={`relative flex items-center gap-3 p-3.5 bg-white rounded-2xl border transition-colors duration-200 cursor-pointer shadow-[0_1px_3px_rgba(0,0,0,0.04)] ${
         isDone
-          ? 'border-[#E9ECEF]/60 bg-white/80 opacity-90'
+          ? 'border-[#E9ECEF]/60 bg-white/80'
           : 'border-[#E9ECEF] hover:border-[#1EA65C]/50'
       }`}
     >
@@ -50,9 +83,19 @@ export default function TaskCard({ task, onToggle }) {
         }`}
       >
         {isDone ? (
-          <svg className="w-4 h-4 stroke-[2.5]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round">
+          <motion.svg
+            className="w-4 h-4 stroke-[2.5]"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            initial={checkInitial}
+            animate={checkAnimate}
+            transition={{ duration: 0.25, ease: 'easeOut' }}
+          >
             <polyline points="20 6 9 17 4 12"></polyline>
-          </svg>
+          </motion.svg>
         ) : (
           <div className="w-2 h-2 rounded-full bg-transparent"></div>
         )}
@@ -134,6 +177,6 @@ export default function TaskCard({ task, onToggle }) {
           <circle cx="12" cy="19" r="2"></circle>
         </svg>
       </button>
-    </article>
+    </motion.article>
   );
 }
